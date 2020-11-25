@@ -6,7 +6,7 @@ const ball = {
   x: 320,
   y: 240,
   radius: 3,
-  xSpeed: 2,
+  xSpeed: 5,
   ySpeed: 0,
   reverseX: function() {
     this.xSpeed *= -1;
@@ -14,24 +14,42 @@ const ball = {
   reverseY: function() {
     this.ySpeed *= -1;
   }
-  };
+};
+const heldDown = {};
 
 function paddle(x, y, width, height) {
   this.x = x;
   this.y = y;
   this.width = width;
   this.height = height;
+
   this.hasCollideWith = function(ball) {
     const paddleLeftWall = this.x;
     const paddleRightWall = this.x + this.width;
     const papaddleTopWall = this.y;
     const paddleBottomWall = this.y + this.height;
+
     if(ball.x > paddleLeftWall && ball.x < paddleRightWall
       && ball.y > papaddleTopWall && ball.y < paddleBottomWall) {
         return true;
     }
     return false;
-  }
+  };
+
+  this.move = function(keyCode) {
+    let nextY = this.y;
+
+    if(keyCode === '40') {
+      nextY += 5;
+    } else if(keyCode === '38') {
+      nextY += -5;
+    }
+
+    nextY = nextY < 0 ? 0 : nextY;
+    nextY = nextY + this.height > 480 ? 480 - this.height : nextY;
+
+    this.y = nextY;
+  };
 }
 
 function renderPaddle(paddle) {
@@ -49,8 +67,15 @@ function renderBall(ball) {
 function updateGame() {
   ball.x += ball.xSpeed;
   ball.y += ball.ySpeed;
-  if(player.hasCollideWith(ball) || ai.hasCollideWith(ball)) {
+  const collideWithPlayer = player.hasCollideWith(ball);
+  const collideWithAi = ai.hasCollideWith(ball);
+
+  if(collideWithPlayer || collideWithAi) {
     ball.reverseX();
+  }
+
+  for(var keyCode in heldDown) {
+    player.move(keyCode);
   }
 }
 
@@ -67,5 +92,13 @@ function tick() {
   draw();
   window.setTimeout('tick()', 1000/60);
 }
+
+window.addEventListener('keydown', function(keyInfo) {
+  heldDown[event.keyCode] = true;
+}, false);
+
+window.addEventListener('keyup', function(keyInfo) {
+  delete heldDown[event.keyCode];
+}, false);
 
 tick();
