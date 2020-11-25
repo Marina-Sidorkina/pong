@@ -6,7 +6,7 @@ const ball = {
   x: 320,
   y: 240,
   radius: 3,
-  xSpeed: 5,
+  xSpeed: 2,
   ySpeed: 0,
   reverseX: function() {
     this.xSpeed *= -1;
