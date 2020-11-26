@@ -2,11 +2,13 @@ const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 const player = new paddle(5, 200, 25, 100);
 const ai = new paddle(610, 200, 25, 100);
+const heldDown = {};
+
 const ball = {
   x: 320,
   y: 240,
   radius: 5,
-  xSpeed: 2,
+  xSpeed: 3,
   ySpeed: 0,
   reverseX: function() {
     this.xSpeed *= -1;
@@ -34,7 +36,6 @@ const ball = {
     this.ySpeed += modification;
   }
 };
-const heldDown = {};
 
 function paddle(x, y, width, height) {
   this.x = x;
@@ -91,6 +92,9 @@ function renderBall(ball) {
 function updateGame() {
   ball.x += ball.xSpeed;
   ball.y += ball.ySpeed;
+  const collideWithPlayer = player.hasCollideWith(ball);
+  const collideWithAi = ai.hasCollideWith(ball);
+  let aiMiddle = ai.y + (ai.height / 2);
 
   if(ball.x < 0 || ball.x > 640) {
     ball.reset();
@@ -99,9 +103,6 @@ function updateGame() {
   if(ball.y <= 0 || ball.y >= 480) {
     ball.reverseY();
   }
-
-  const collideWithPlayer = player.hasCollideWith(ball);
-  const collideWithAi = ai.hasCollideWith(ball);
 
   if(collideWithPlayer || collideWithAi) {
     ball.reverseX();
@@ -113,8 +114,6 @@ function updateGame() {
   for(var keyCode in heldDown) {
     player.move(keyCode);
   }
-
-  let aiMiddle = ai.y + (ai.height / 2);
 
   if(aiMiddle < ball.y) {
     ai.move('40');
