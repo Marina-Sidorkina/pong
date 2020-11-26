@@ -5,7 +5,7 @@ const ai = new paddle(610, 200, 25, 100);
 const ball = {
   x: 320,
   y: 240,
-  radius: 3,
+  radius: 5,
   xSpeed: 2,
   ySpeed: 0,
   reverseX: function() {
