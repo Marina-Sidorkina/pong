@@ -30,7 +30,7 @@ const ball = {
     this.xSpeed = nextValue;
   },
   modifyYSpeedBy: function(modification) {
-    modification = this.ySpeed < 0 ? modificcation * -1 : modification;
+    modification = this.ySpeed < 0 ? modification * -1 : modification;
     this.ySpeed += modification;
   }
 };
@@ -112,6 +112,16 @@ function updateGame() {
 
   for(var keyCode in heldDown) {
     player.move(keyCode);
+  }
+
+  let aiMiddle = ai.y + (ai.height / 2);
+
+  if(aiMiddle < ball.y) {
+    ai.move('40');
+  }
+
+  if(aiMiddle > ball.y) {
+    ai.move('38');
   }
 }
 
