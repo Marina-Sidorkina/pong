@@ -59,12 +59,13 @@ function paddle(x, y, width, height) {
 
   this.move = function(keyCode) {
     let nextY = this.y;
+    let addition = ball.ySpeed === 0 ? 1 : Math.abs(ball.ySpeed);
 
     if(keyCode === '40') {
-      nextY += 5;
+      nextY += addition;
       this.speedModifier = 1.5;
     } else if(keyCode === '38') {
-      nextY += -5;
+      nextY -= addition;
       this.speedModifier = 1.5;
     } else {
       this.speedModifier = 0;
@@ -111,7 +112,7 @@ function updateGame() {
     ball.modifyYSpeedBy(speedUpValue);
   }
 
-  for(var keyCode in heldDown) {
+  for(let keyCode in heldDown) {
     player.move(keyCode);
   }
 
