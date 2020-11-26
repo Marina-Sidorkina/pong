@@ -13,6 +13,19 @@ const ball = {
   },
   reverseY: function() {
     this.ySpeed *= -1;
+  },
+  isBouncing: function() {
+    return ball.ySpeed !== 0;
+  },
+  modifyXSpeedBy: function(modification) {
+    modification = this.xSpeed < 0 ? modification * -1 : modification;
+    let nextValue = this.xSpeed + modification;
+    nextValue = Math.abs(nextValue) > 9 ? 9 : nextValue;
+    this.xSpeed = nextValue;
+  },
+  modifyYSpeedBy: function(modification) {
+    modification = this.ySpeed < 0 ? modificcation * -1 : modification;
+    this.ySpeed += modification;
   }
 };
 const heldDown = {};
@@ -22,6 +35,7 @@ function paddle(x, y, width, height) {
   this.y = y;
   this.width = width;
   this.height = height;
+  this.speedModifier = 0;
 
   this.hasCollideWith = function(ball) {
     const paddleLeftWall = this.x;
@@ -41,8 +55,12 @@ function paddle(x, y, width, height) {
 
     if(keyCode === '40') {
       nextY += 5;
+      this.speedModifier = 1.5;
     } else if(keyCode === '38') {
       nextY += -5;
+      this.speedModifier = 1.5;
+    } else {
+      this.speedModifier = 0;
     }
 
     nextY = nextY < 0 ? 0 : nextY;
