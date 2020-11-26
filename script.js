@@ -14,6 +14,12 @@ const ball = {
   reverseY: function() {
     this.ySpeed *= -1;
   },
+  reset: function() {
+    this.x = 320;
+    this.y = 240;
+    this.xSpeed = 2;
+    this.ySpeed = 0;
+  },
   isBouncing: function() {
     return ball.ySpeed !== 0;
   },
@@ -85,11 +91,23 @@ function renderBall(ball) {
 function updateGame() {
   ball.x += ball.xSpeed;
   ball.y += ball.ySpeed;
+
+  if(ball.x < 0 || ball.x > 640) {
+    ball.reset();
+  }
+
+  if(ball.y <= 0 || ball.y >= 480) {
+    ball.reverseY();
+  }
+
   const collideWithPlayer = player.hasCollideWith(ball);
   const collideWithAi = ai.hasCollideWith(ball);
 
   if(collideWithPlayer || collideWithAi) {
     ball.reverseX();
+    ball.modifyXSpeedBy(0.25);
+    const speedUpValue = collideWithPlayer ? player.speedModifier : ai.speedModifier;
+    ball.modifyYSpeedBy(speedUpValue);
   }
 
   for(var keyCode in heldDown) {
